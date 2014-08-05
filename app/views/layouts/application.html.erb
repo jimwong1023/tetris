@@ -8,7 +8,26 @@
 </head>
 <body>
 
-<%= yield %>
+	<div id='gray_border'>
+    <div id='matrix'>
+      <div id='left_lines'>
+        <div id='left_pink'></div>
+        <div id='left_purple'></div>
+      </div>
+      <p>DOT MATRIX WITH STEREO SOUND</p>
+      <div id='right_lines'>
+        <div id='right_pink'></div>
+        <div id='right_purple'></div>
+      </div>
+    </div>
+    <div id='battery'>
+      <div id='battery_indicator'></div>
+      <p>BATTERY</p>
+    </div>
+    <div id='main'>
+      <%= yield %>
+    </div>
+  </div>
 
 </body>
 </html>
