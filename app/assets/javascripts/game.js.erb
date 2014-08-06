@@ -1,32 +1,56 @@
 var ROWS = 20;
 var COLS = 10;
 
-var imgLoader;
+//Pixel size of blocks in blocks.png
+var SIZE = 30;
+
 var canvas;
 var ctx;
 var blockImg;
 
+// Game
+
 function Game () {
 	this.board = new Board();
-	this.curTime
+	this.curTime = 0
+	this.prevTime = 0
+	// this.requestAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 }
 
 Game.prototype.update = function () {
 	this.curTime = new Date().getTime();
+	if ( this.curTime - this.prevTime > 500 ) {
+		if ( this.board.checkCollision(this.board.curBlock.gridX, this.board.curBlock.gridY + 1, this.board.curBlock.curState) ) {
+			this.board.curBlock.gridY += 1
+		}
 
-	if ( curTime - new Date().getTime() > 500 ) {
+		this.prevTime = this.curTime;
+	}
 
+	ctx.clearRect(0, 0, 300, 600);
+	this.board.drawState();
+	this.board.drawBlock();
+
+	if ( this.checkEnd() === false ) {
+		requestAnimationFrame(this.update.bind(this));
 	}
 }
+
+Game.prototype.checkEnd = function () {
+	return false
+}
+
+// Board
 
 function Board () {
 	this.gridState = [];
 	this.clearGridState();
+	this.curBlock = new LBlock();
 }
 
-Board.prototype.updateGridState = function () {
+// Board.prototype.updateGridState = function () {
 
-}
+// }
 
 Board.prototype.clearGridState = function () {
 	for ( var row = 0; row < ROWS; row++ ) {
@@ -37,11 +61,74 @@ Board.prototype.clearGridState = function () {
 	}
 }
 
-Board.prototype.checkMove = function (newX, newY, newState) {
-	
+Board.prototype.checkCollision = function (newX, newY, newState) {
+	var xPos = newX;
+	var yPos = newY;
+
+	for ( var r = 0, rowLen = this.curBlock.states[newState].length; r < rowLen; r++ ) {
+		for ( var c = 0, colLen = this.curBlock.states[newState][r].length; c < colLen; c++ ) {
+			if ( newY >= ROWS || newY < 0 || newX >= COLS || newX < 0 ) {
+				console.log("FIRST FALSE");
+				return false;
+			}
+			else if ( this.gridState[yPos][xPos + c] != 0 ) {
+				console.log("SECOND FALSE");
+				return false;
+			}
+		}
+		yPos += 1
+	}
+	return true
 }
 
-function LPiece () {
+Board.prototype.drawState = function () {
+	for ( var r = 0; r < ROWS; r++ ) {
+		for ( var c = 0; c < COLS; c++ ) {
+			if ( this.gridState[r][c] != 0 ) {
+				console.log(ctx);
+			}
+		}
+	}
+}
+
+Board.prototype.drawBlock = function () {
+	var block = this.curBlock
+	var xPos  = block.gridX
+	var yPos  = block.gridY
+	var state = block.curState
+
+	for ( var r = 0, rowLen = block.states[state].length; r < rowLen; r++ ) {
+		for ( var c = 0, colLen = block.states[state][r].length; c < colLen; c++ ) {
+			if ( block.states[state][r][c] === 1 && block.gridY >= 0 ) {
+				ctx.drawImage(blockImg, block.color * SIZE, 0, SIZE, SIZE, xPos * SIZE, yPos * SIZE, SIZE, SIZE);
+			}
+			xPos += 1
+		}
+		yPos += 1
+		xPos = block.gridX
+	}
+}
+
+// Blocks
+
+function Block () {
+
+}
+
+Block.prototype.isLegalState = function (newState) {
+	if (this.states[newState] === undefined) {
+		return false
+	}
+	else {
+		return true
+	}
+}
+
+LBlock.prototype = new Block();
+
+LBlock.prototype.constructor = LBlock;
+
+function LBlock () {
 	this.state1 = [ [1,0],
 									[1,0],
 									[1,1] ];
@@ -57,9 +144,13 @@ function LPiece () {
 									[1,0,0] ];
 
 	this.gridX = 4;
-	this.gridY = 0;
-	this.color = 0;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2, this.state3, this.state4];
 }
+
+// Page
 
 function loadImage (src, _callback) {
 	blockImg = new Image();
@@ -69,6 +160,8 @@ function loadImage (src, _callback) {
 
 $(document).ready(function () { 
 	var game = new Game();
+	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
   loadImage("<%= asset_path('blocks.png') %>", function() {
   	canvas = $('#canvas').get(0);
@@ -76,7 +169,7 @@ $(document).ready(function () {
 
 		$("#startGame").click(function () {
 			$("#mainMenu").remove();
-			
+			requestAnimationFrame(game.update.bind(game));
 		})
   });
 

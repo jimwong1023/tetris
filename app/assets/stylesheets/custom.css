@@ -96,6 +96,10 @@ body {
   padding: 0 3px;
 }
 
+#canvas {
+	border: 2px solid #000;
+}
+
 #gameTitle {
   text-align: center;
   font-size: 45pt;
