@@ -95,3 +95,35 @@ body {
   font-size: 18pt;
   padding: 0 3px;
 }
+
+#gameTitle {
+  text-align: center;
+  font-size: 45pt;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#mainMenu {
+  margin: 0 auto;
+  width: 400px;
+}
+
+.button {
+  display: block;
+  height: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 1px solid #222200;
+  background-color: #476200;
+  color: #222200;
+  line-height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover, .submit-button:hover, .levels_nav:hover{ 
+  color: #476200;
+  background-color: #222200;
+  text-decoration: none;
+}

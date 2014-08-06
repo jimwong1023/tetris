@@ -1,0 +1,83 @@
+var ROWS = 20;
+var COLS = 10;
+
+var imgLoader;
+var canvas;
+var ctx;
+var blockImg;
+
+function Game () {
+	this.board = new Board();
+	this.curTime
+}
+
+Game.prototype.update = function () {
+	this.curTime = new Date().getTime();
+
+	if ( curTime - new Date().getTime() > 500 ) {
+
+	}
+}
+
+function Board () {
+	this.gridState = [];
+	this.clearGridState();
+}
+
+Board.prototype.updateGridState = function () {
+
+}
+
+Board.prototype.clearGridState = function () {
+	for ( var row = 0; row < ROWS; row++ ) {
+		this.gridState[row] = [];
+		for ( var col = 0; col < COLS; col++ ) {
+			this.gridState[row].push(0);
+		}
+	}
+}
+
+Board.prototype.checkMove = function (newX, newY, newState) {
+	
+}
+
+function LPiece () {
+	this.state1 = [ [1,0],
+									[1,0],
+									[1,1] ];
+
+	this.state2 = [ [0,0,1],
+									[1,1,1] ];
+
+	this.state3 = [ [1,1],
+									[0,1],
+									[0,1] ];
+
+	this.state4 = [ [1,1,1],
+									[1,0,0] ];
+
+	this.gridX = 4;
+	this.gridY = 0;
+	this.color = 0;
+}
+
+function loadImage (src, _callback) {
+	blockImg = new Image();
+	blockImg.onload = _callback;
+	blockImg.src = src;
+}
+
+$(document).ready(function () { 
+	var game = new Game();
+
+  loadImage("<%= asset_path('blocks.png') %>", function() {
+  	canvas = $('#canvas').get(0);
+		ctx = canvas.getContext('2d');
+
+		$("#startGame").click(function () {
+			$("#mainMenu").remove();
+			
+		})
+  });
+
+});
