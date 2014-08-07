@@ -23,6 +23,9 @@ Game.prototype.update = function () {
 		if ( this.board.checkCollision(this.board.curBlock.gridX, this.board.curBlock.gridY + 1, this.board.curBlock.curState) ) {
 			this.board.curBlock.gridY += 1
 		}
+		else {
+			this.board.cementCurBlock();
+		}
 
 		this.prevTime = this.curTime;
 	}
@@ -31,12 +34,65 @@ Game.prototype.update = function () {
 	this.board.drawState();
 	this.board.drawBlock();
 
-	if ( this.checkEnd() === false ) {
+	if ( this.isOver() === false ) {
 		requestAnimationFrame(this.update.bind(this));
 	}
 }
 
-Game.prototype.checkEnd = function () {
+Game.prototype.getInput = function (e) {
+	e.preventDefault();
+	var block = this.board.curBlock;
+	var newState = block.isLegalState(block.curState + 1) ? block.curState + 1 : 0
+
+	if ( this.isOver() === false ) {
+		switch ( e.keyCode ) {
+			case 37: {
+				if ( this.board.checkCollision(block.gridX - 1, block.gridY, block.curState) ) {
+					block.gridX--;
+				}
+			}
+			break;
+
+			case 39: {
+				if ( this.board.checkCollision(block.gridX + 1, block.gridY, block.curState) ) {
+					block.gridX++;
+				}
+			}
+			break;
+
+			case 38: {
+
+				if ( this.board.checkCollision(block.gridX, block.gridY, newState) ) {
+					block.curState = newState
+				}
+				else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState) ) {
+					block.curState = newState
+					block.gridX--
+				}
+				else if ( block.constructor.name === "IBlock" ) {
+					if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState) ) {
+						block.curState = newState
+						block.gridX -= 2
+					}
+					else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState) ) {
+						block.curState = newState
+						block.gridX -= 3
+					}
+				}
+			}
+			break;
+
+			case 40: {
+				if (this.board.checkCollision(block.gridX, block.gridY + 1, block.curState ) ) {
+					block.gridY++
+				}
+			}
+			break;
+		}
+	}
+}
+
+Game.prototype.isOver = function () {
 	return false
 }
 
@@ -47,10 +103,6 @@ function Board () {
 	this.clearGridState();
 	this.curBlock = new LBlock();
 }
-
-// Board.prototype.updateGridState = function () {
-
-// }
 
 Board.prototype.clearGridState = function () {
 	for ( var row = 0; row < ROWS; row++ ) {
@@ -64,19 +116,26 @@ Board.prototype.clearGridState = function () {
 Board.prototype.checkCollision = function (newX, newY, newState) {
 	var xPos = newX;
 	var yPos = newY;
+	var block = this.curBlock
 
-	for ( var r = 0, rowLen = this.curBlock.states[newState].length; r < rowLen; r++ ) {
-		for ( var c = 0, colLen = this.curBlock.states[newState][r].length; c < colLen; c++ ) {
-			if ( newY >= ROWS || newY < 0 || newX >= COLS || newX < 0 ) {
-				console.log("FIRST FALSE");
+	if ( block.isLegalState(newState) === false ) {
+		newState = 0
+	}
+
+	for ( var r = 0, rowLen = block.states[newState].length; r < rowLen; r++ ) {
+		for ( var c = 0, colLen = block.states[newState][r].length; c < colLen; c++ ) {
+			if ( yPos >= ROWS || xPos >= COLS || xPos < 0 ) {
+				console.log("FALSE1")
 				return false;
 			}
-			else if ( this.gridState[yPos][xPos + c] != 0 ) {
-				console.log("SECOND FALSE");
+			else if ( this.gridState[yPos] === undefined || this.gridState[yPos][xPos] != 0 && this.curBlock.states[newState][r][c] === 1 ) {
+				console.log("FALSE2")
 				return false;
 			}
+			xPos += 1
 		}
 		yPos += 1
+		xPos = newX
 	}
 	return true
 }
@@ -85,7 +144,7 @@ Board.prototype.drawState = function () {
 	for ( var r = 0; r < ROWS; r++ ) {
 		for ( var c = 0; c < COLS; c++ ) {
 			if ( this.gridState[r][c] != 0 ) {
-				console.log(ctx);
+				ctx.drawImage(blockImg, (this.gridState[r][c] - 1) * SIZE, 0, SIZE, SIZE, c * SIZE, r * SIZE, SIZE, SIZE);
 			}
 		}
 	}
@@ -109,6 +168,44 @@ Board.prototype.drawBlock = function () {
 	}
 }
 
+Board.prototype.cementCurBlock = function () {
+	var block = this.curBlock
+	var xPos  = block.gridX
+	var yPos  = block.gridY
+	var state = block.curState
+
+	for ( var r = 0, rowLen = block.states[state].length; r < rowLen; r++ ) {
+		for (var c = 0, colLen = block.states[state][r].length; c < colLen; c++ ) {
+			if ( block.states[state][r][c] === 1 && block.gridY >= 0 ) {
+				this.gridState[yPos][xPos] = block.color + 1
+			}
+			xPos += 1
+		}
+		yPos +=1
+		xPos = block.gridX
+	}
+
+	this.curBlock = this.getRandBlock();
+}
+
+Board.prototype.checkFullRow = function () {
+	
+}
+
+Board.prototype.getRandBlock = function () {
+	var num = Math.floor(Math.random() * 7);
+
+	switch (num) {
+		case 0: return new LBlock();
+		case 1: return new IBlock();
+		case 2: return new ZBlock();
+		case 3: return new backZBlock();
+		case 4: return new backLBlock();
+		case 5: return new SBlock();
+		case 6: return new TBlock();
+	}
+}
+
 // Blocks
 
 function Block () {
@@ -124,8 +221,126 @@ Block.prototype.isLegalState = function (newState) {
 	}
 }
 
-LBlock.prototype = new Block();
+TBlock.prototype = new Block();
+TBlock.prototype.constructor = TBlock;
 
+function TBlock () {
+	this.state1 = [ [1,1,1],
+									[0,1,0] ];
+
+	this.state2 = [ [1,0],
+									[1,1],
+									[1,0] ];
+
+	this.state3 = [ [0,1,0],
+									[1,1,1] ];
+
+	this.state4 = [ [0,1],
+									[1,1],
+									[0,1] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2, this.state3, this.state4];
+
+}
+
+IBlock.prototype = new Block();
+IBlock.prototype.constructor = IBlock;
+
+function IBlock () {
+	this.state1 = [ [1],
+									[1],
+									[1],
+									[1] ];
+
+	this.state2 = [ [1,1,1,1] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2];
+}
+
+backZBlock.prototype = new Block();
+backZBlock.prototype.constructor = backZBlock;
+
+function backZBlock () {
+	this.state1 = [ [0,1,1],
+									[1,1,0] ];
+
+	this.state2 = [ [1,0],
+									[1,1],
+									[0,1] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2];
+}
+
+ZBlock.prototype = new Block();
+ZBlock.prototype.constructor = ZBlock;
+
+function ZBlock () {
+	this.state1 = [ [1,1,0],
+									[0,1,1] ];
+
+	this.state2 = [ [0,1],
+									[1,1],
+									[1,0] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2];
+}
+
+SBlock.prototype = new Block();
+SBlock.prototype.constructor = SBlock;
+
+function SBlock () {
+	this.state1 = [ [1,1],
+									[1,1] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1];
+}
+
+backLBlock.prototype = new Block();
+backLBlock.prototype.constructor = backLBlock;
+
+function backLBlock () {
+	this.state1 = [ [0,1],
+									[0,1],
+									[1,1] ];
+
+	this.state2 = [ [1,1,1],
+									[0,0,1] ];
+
+	this.state3 = [ [1,1],
+									[1,0],
+									[1,0] ];
+
+	this.state4 = [ [1,0,0],
+									[1,1,1] ];
+
+	this.gridX = 4;
+	this.gridY = -1;
+	this.color = Math.floor(Math.random() * 8);
+	this.curState = 0;
+	this.states = [this.state1, this.state2, this.state3, this.state4];
+}
+
+LBlock.prototype = new Block();
 LBlock.prototype.constructor = LBlock;
 
 function LBlock () {
@@ -152,9 +367,9 @@ function LBlock () {
 
 // Page
 
-function loadImage (src, _callback) {
+function loadImage (src, callback) {
 	blockImg = new Image();
-	blockImg.onload = _callback;
+	blockImg.onload = callback;
 	blockImg.src = src;
 }
 
@@ -169,6 +384,7 @@ $(document).ready(function () {
 
 		$("#startGame").click(function () {
 			$("#mainMenu").remove();
+			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})
   });
