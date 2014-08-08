@@ -151,45 +151,84 @@ Board.prototype.drawState = function () {
 }
 
 Board.prototype.drawBlock = function () {
-	var block = this.curBlock
-	var xPos  = block.gridX
-	var yPos  = block.gridY
-	var state = block.curState
+	var block = this.curBlock;
+	var xPos  = block.gridX;
+	var yPos  = block.gridY;
+	var state = block.curState;
 
 	for ( var r = 0, rowLen = block.states[state].length; r < rowLen; r++ ) {
 		for ( var c = 0, colLen = block.states[state][r].length; c < colLen; c++ ) {
 			if ( block.states[state][r][c] === 1 && block.gridY >= 0 ) {
 				ctx.drawImage(blockImg, block.color * SIZE, 0, SIZE, SIZE, xPos * SIZE, yPos * SIZE, SIZE, SIZE);
 			}
-			xPos += 1
+			xPos += 1;
 		}
-		yPos += 1
-		xPos = block.gridX
+		yPos += 1;
+		xPos = block.gridX;
 	}
 }
 
 Board.prototype.cementCurBlock = function () {
-	var block = this.curBlock
-	var xPos  = block.gridX
-	var yPos  = block.gridY
-	var state = block.curState
+	var block = this.curBlock;
+	var xPos  = block.gridX;
+	var yPos  = block.gridY;
+	var state = block.curState;
 
 	for ( var r = 0, rowLen = block.states[state].length; r < rowLen; r++ ) {
 		for (var c = 0, colLen = block.states[state][r].length; c < colLen; c++ ) {
 			if ( block.states[state][r][c] === 1 && block.gridY >= 0 ) {
-				this.gridState[yPos][xPos] = block.color + 1
+				this.gridState[yPos][xPos] = block.color + 1;
 			}
-			xPos += 1
+			xPos += 1;
 		}
-		yPos +=1
-		xPos = block.gridX
+		yPos +=1;
+		xPos = block.gridX;
 	}
 
+	if ( this.checkFullRow() !== [] ) {
+		this.clearAndCollapse(this.checkFullRow());
+	}
 	this.curBlock = this.getRandBlock();
 }
 
 Board.prototype.checkFullRow = function () {
-	
+	var block = this.curBlock;
+	var yPos  = block.gridY;
+	var fullRows = [];
+
+	for ( var r = 0, rowLen = block.states[block.curState].length; r < rowLen; r++ ) {
+		if (this.gridState[yPos].indexOf(0) === -1) {
+			fullRows.push(yPos);
+		}
+		yPos +=1;
+	}
+	console.log(fullRows);
+	return fullRows;
+}
+
+Board.prototype.clearAndCollapse = function (array) {
+	var num = array.length;
+	var row, col;
+
+	for ( var i = 0; i < num; i++ ) {
+		row = array[i];
+		col = 0;
+		while (row >=0) {
+			while (col < COLS) {
+				if(row > 0) {
+					this.gridState[row][col] = this.gridState[row - 1][col];
+				}
+				else {
+					this.gridState[row][col] = 0;
+				}
+				col++;
+			}
+			col = 0;
+			row--
+		}
+	}
+
+
 }
 
 Board.prototype.getRandBlock = function () {
