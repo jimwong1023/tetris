@@ -26,10 +26,8 @@ Game.prototype.update = function () {
 		}
 		else {
 			this.board.cementCurBlock();
-			this.level <= 10 ? this.score = this.score + (this.board.rowsCleared * this.level) : this.score = this.score + (this.board.rowsCleared * 10);
+			this.updateScore();
 			this.levelUp();
-			console.log(this.score)
-			console.log(this.level)
 		}
 
 		this.prevTime = this.curTime;
@@ -48,9 +46,18 @@ Game.prototype.update = function () {
 }
 
 Game.prototype.levelUp = function () {
-	if (this.score / this.level > 10) {
-		this.level++
+	
+	if ( this.score / this.level > 8 ) {
+		this.level++;
+		$("#level").find("span").text(this.level);
 	}
+
+}
+
+Game.prototype.updateScore = function () {
+	this.score = this.score + this.board.rowsCleared;
+
+	$("#score").find("span").text(this.score);
 }
 
 Game.prototype.levelTimer = function () {
@@ -466,7 +473,6 @@ function loadImage (src, callback) {
 
 $(document).ready(function () { 
 	var game = new Game();
-	$("#canvas").hide();
 	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
@@ -476,7 +482,7 @@ $(document).ready(function () {
 
 		$("#startGame").click(function () {
 			$("#mainMenu").remove();
-			$("#canvas").show();
+			$("#canvasContainer").removeClass("hidden");
 			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})

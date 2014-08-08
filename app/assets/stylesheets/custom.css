@@ -96,15 +96,37 @@ body {
   padding: 0 3px;
 }
 
+#canvasContainer { 
+	width: 600px;
+	height: 600px; 
+	float: left;
+}
+
 #canvas {
+	width: 300px;
+	height: 600px;
 	padding-left: 0;
   padding-right: 0;
-  margin-left: auto;
+  margin-left: 40px;
   margin-right: auto;
   display: block;
+  float: left;
 	border-left: 5px solid #000;
 	border-right: 5px solid #000;
 	border-bottom: 1px solid #000;
+}
+
+#gameInfo {
+	margin-top: 60px;
+	margin-right: 12%;
+	float: right;
+}
+
+#level, #score {
+	width: 100%;
+	text-align: center;
+	margin: auto;
+	margin-bottom: 20px;
 }
 
 #gameTitle {
@@ -140,5 +162,5 @@ body {
 }
 
 .hidden {
-	visibility: hidden;
+	display: none;
 }
