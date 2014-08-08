@@ -97,7 +97,14 @@ body {
 }
 
 #canvas {
-	border: 2px solid #000;
+	padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+	border-left: 5px solid #000;
+	border-right: 5px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 #gameTitle {
@@ -130,4 +137,8 @@ body {
   color: #476200;
   background-color: #222200;
   text-decoration: none;
+}
+
+.hidden {
+	visibility: hidden;
 }

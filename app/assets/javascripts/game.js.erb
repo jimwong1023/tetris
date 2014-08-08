@@ -451,6 +451,7 @@ $(document).ready(function () {
 
 		$("#startGame").click(function () {
 			$("#mainMenu").remove();
+			$("#canvas").removeClass("hidden");
 			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})
