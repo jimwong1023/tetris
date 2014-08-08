@@ -14,16 +14,22 @@ function Game () {
 	this.board = new Board();
 	this.curTime = 0;
 	this.prevTime = 0;
+	this.level = 1;
+	this.score = 0;
 }
 
 Game.prototype.update = function () {
 	this.curTime = new Date().getTime();
-	if ( this.curTime - this.prevTime > 500 ) {
+	if ( this.curTime - this.prevTime > this.levelTimer() ) {
 		if ( this.board.checkCollision(this.board.curBlock.gridX, this.board.curBlock.gridY + 1, this.board.curBlock.curState) ) {
 			this.board.curBlock.gridY += 1;
 		}
 		else {
 			this.board.cementCurBlock();
+			this.level <= 10 ? this.score = this.score + (this.board.rowsCleared * this.level) : this.score = this.score + (this.board.rowsCleared * 10);
+			this.levelUp();
+			console.log(this.score)
+			console.log(this.level)
 		}
 
 		this.prevTime = this.curTime;
@@ -39,6 +45,20 @@ Game.prototype.update = function () {
 	else {
 		alert("GAME OVER!");
 	}
+}
+
+Game.prototype.levelUp = function () {
+	if (this.score / this.level > 10) {
+		this.level++
+	}
+}
+
+Game.prototype.levelTimer = function () {
+	var millisecs = 540 - (this.level * 40)
+
+	millisecs > 75 ? millisecs : millisecs = 75
+
+	return millisecs
 }
 
 Game.prototype.getInput = function (e) {
@@ -124,6 +144,7 @@ function Board () {
 	this.clearGridState();
 	this.curBlock = this.getRandBlock();
 	this.isOver = false
+	this.rowsCleared = 0
 }
 
 Board.prototype.clearGridState = function () {
@@ -147,12 +168,10 @@ Board.prototype.checkCollision = function (newX, newY, newState) {
 	for ( var r = 0, rowLen = block.states[newState].length; r < rowLen; r++ ) {
 		for ( var c = 0, colLen = block.states[newState][r].length; c < colLen; c++ ) {
 			if ( yPos >= ROWS || xPos >= COLS || xPos < 0 ) {
-				console.log("FALSE1")
 				return false;
 			}
 			else if ( this.gridState[yPos] !== undefined ) {
 				if (this.gridState[yPos][xPos] !== 0 && this.curBlock.states[newState][r][c] === 1 ) {
-					console.log("FALSE2")
 					return false;
 				}
 			}
@@ -235,12 +254,12 @@ Board.prototype.checkFullRow = function () {
 		}
 		yPos +=1;
 	}
-	console.log(fullRows);
 	return fullRows;
 }
 
 Board.prototype.clearAndCollapse = function (array) {
 	var num = array.length;
+	this.rowsCleared = array.length;
 	var row, col;
 
 	for ( var i = 0; i < num; i++ ) {
