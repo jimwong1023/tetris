@@ -150,9 +150,14 @@ Board.prototype.checkCollision = function (newX, newY, newState) {
 				console.log("FALSE1")
 				return false;
 			}
-			else if ( this.gridState[yPos] === undefined || this.gridState[yPos][xPos] != 0 && this.curBlock.states[newState][r][c] === 1 ) {
-				console.log("FALSE2")
-				return false;
+			else if ( this.gridState[yPos] !== undefined ) {
+				if (this.gridState[yPos][xPos] !== 0 && this.curBlock.states[newState][r][c] === 1 ) {
+					console.log("FALSE2")
+					return false;
+				}
+			}
+			else if ( yPos > 0 && this.gridState[yPos] === undefined ) {
+				return false
 			}
 			xPos += 1
 		}
@@ -180,7 +185,7 @@ Board.prototype.drawBlock = function () {
 
 	for ( var r = 0, rowLen = block.states[state].length; r < rowLen; r++ ) {
 		for ( var c = 0, colLen = block.states[state][r].length; c < colLen; c++ ) {
-			if ( block.states[state][r][c] === 1 && block.gridY >= 0 ) {
+			if ( block.states[state][r][c] === 1 && yPos >= 0 ) {
 				ctx.drawImage(blockImg, block.color * SIZE, 0, SIZE, SIZE, xPos * SIZE, yPos * SIZE, SIZE, SIZE);
 			}
 			xPos += 1;
@@ -326,7 +331,7 @@ function IBlock () {
 	this.state2 = [ [1,1,1,1] ];
 
 	this.gridX = 4;
-	this.gridY = -1;
+	this.gridY = -3;
 	this.color = Math.floor(Math.random() * 8);
 	this.curState = 0;
 	this.states = [this.state1, this.state2];
@@ -401,7 +406,7 @@ function backLBlock () {
 									[1,1,1] ];
 
 	this.gridX = 4;
-	this.gridY = -1;
+	this.gridY = -2;
 	this.color = Math.floor(Math.random() * 8);
 	this.curState = 0;
 	this.states = [this.state1, this.state2, this.state3, this.state4];
@@ -426,7 +431,7 @@ function LBlock () {
 									[1,0,0] ];
 
 	this.gridX = 4;
-	this.gridY = -1;
+	this.gridY = -2;
 	this.color = Math.floor(Math.random() * 8);
 	this.curState = 0;
 	this.states = [this.state1, this.state2, this.state3, this.state4];
@@ -442,6 +447,7 @@ function loadImage (src, callback) {
 
 $(document).ready(function () { 
 	var game = new Game();
+	$("#canvas").hide();
 	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
@@ -451,7 +457,7 @@ $(document).ready(function () {
 
 		$("#startGame").click(function () {
 			$("#mainMenu").remove();
-			$("#canvas").removeClass("hidden");
+			$("#canvas").show();
 			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})
