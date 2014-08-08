@@ -2,4 +2,4 @@
 
 Play Tetris on your browser at jw-tetris.herokuapp.com[jw-tetris.herokuapp.com].
 
-I'd like to thank my good friend Dan Apcznski for providing me with the inspiration to recreate this classic and allowing me to use his awesome Gameboy CSS!
+I'd like to thank my good friend {Dan Apcznski}[https://github.com/danapczynski/puzzle_game_opus] for providing me with the inspiration to recreate this classic and allowing me to use his awesome Gameboy CSS!
