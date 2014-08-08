@@ -12,16 +12,15 @@ var blockImg;
 
 function Game () {
 	this.board = new Board();
-	this.curTime = 0
-	this.prevTime = 0
-	// this.requestAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+	this.curTime = 0;
+	this.prevTime = 0;
 }
 
 Game.prototype.update = function () {
 	this.curTime = new Date().getTime();
 	if ( this.curTime - this.prevTime > 500 ) {
 		if ( this.board.checkCollision(this.board.curBlock.gridX, this.board.curBlock.gridY + 1, this.board.curBlock.curState) ) {
-			this.board.curBlock.gridY += 1
+			this.board.curBlock.gridY += 1;
 		}
 		else {
 			this.board.cementCurBlock();
@@ -34,17 +33,21 @@ Game.prototype.update = function () {
 	this.board.drawState();
 	this.board.drawBlock();
 
-	if ( this.isOver() === false ) {
+	if ( this.board.isOver === false ) {
 		requestAnimationFrame(this.update.bind(this));
+	}
+	else {
+		alert("GAME OVER!");
 	}
 }
 
 Game.prototype.getInput = function (e) {
 	e.preventDefault();
 	var block = this.board.curBlock;
-	var newState = block.isLegalState(block.curState + 1) ? block.curState + 1 : 0
+	var newState1 = block.isLegalState(block.curState + 1) ? block.curState + 1 : 0
+	var newState2 = block.isLegalState(block.curState - 1) ? block.curState - 1 : block.states.length - 1
 
-	if ( this.isOver() === false ) {
+	if ( this.board.isOver === false ) {
 		switch ( e.keyCode ) {
 			case 37: {
 				if ( this.board.checkCollision(block.gridX - 1, block.gridY, block.curState) ) {
@@ -62,20 +65,42 @@ Game.prototype.getInput = function (e) {
 
 			case 38: {
 
-				if ( this.board.checkCollision(block.gridX, block.gridY, newState) ) {
-					block.curState = newState
+				if ( this.board.checkCollision(block.gridX, block.gridY, newState1) ) {
+					block.curState = newState1
 				}
-				else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState) ) {
-					block.curState = newState
+				else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState1) ) {
+					block.curState = newState1
 					block.gridX--
 				}
 				else if ( block.constructor.name === "IBlock" ) {
-					if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState) ) {
-						block.curState = newState
+					if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState1) ) {
+						block.curState = newState1
 						block.gridX -= 2
 					}
-					else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState) ) {
-						block.curState = newState
+					else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState1) ) {
+						block.curState = newState1
+						block.gridX -= 3
+					}
+				}
+			}
+			break;
+
+			case 32: {
+
+				if ( this.board.checkCollision(block.gridX, block.gridY, newState2) ) {
+					block.curState = newState2
+				}
+				else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState2) ) {
+					block.curState = newState2
+					block.gridX--
+				}
+				else if ( block.constructor.name === "IBlock" ) {
+					if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState2) ) {
+						block.curState = newState2
+						block.gridX -= 2
+					}
+					else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState2) ) {
+						block.curState = newState2
 						block.gridX -= 3
 					}
 				}
@@ -92,16 +117,13 @@ Game.prototype.getInput = function (e) {
 	}
 }
 
-Game.prototype.isOver = function () {
-	return false
-}
-
 // Board
 
 function Board () {
 	this.gridState = [];
 	this.clearGridState();
-	this.curBlock = new LBlock();
+	this.curBlock = this.getRandBlock();
+	this.isOver = false
 }
 
 Board.prototype.clearGridState = function () {
@@ -185,6 +207,9 @@ Board.prototype.cementCurBlock = function () {
 		xPos = block.gridX;
 	}
 
+	if ( block.gridY < 0 ) {
+		this.isOver = true;
+	}
 	if ( this.checkFullRow() !== [] ) {
 		this.clearAndCollapse(this.checkFullRow());
 	}
@@ -197,6 +222,9 @@ Board.prototype.checkFullRow = function () {
 	var fullRows = [];
 
 	for ( var r = 0, rowLen = block.states[block.curState].length; r < rowLen; r++ ) {
+		if (yPos < 0) {
+			break;
+		}
 		if (this.gridState[yPos].indexOf(0) === -1) {
 			fullRows.push(yPos);
 		}
