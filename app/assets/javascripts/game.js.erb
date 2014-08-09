@@ -57,8 +57,7 @@ Game.prototype.reset = function () {
 }
 
 Game.prototype.levelUp = function () {
-	
-	if ( this.score / this.level > 8 ) {
+	if ( this.level < Math.floor(0.2 * Math.sqrt(this.score)) ) {
 		this.level++;
 		$(".level").find("span").text(this.level);
 	}
@@ -66,7 +65,15 @@ Game.prototype.levelUp = function () {
 }
 
 Game.prototype.updateScore = function () {
-	this.score = this.score + this.board.rowsCleared;
+	var rowsCleared = this.board.rowsCleared;
+
+	this.score = this.score + ((rowsCleared*10));
+
+	if ( rowsCleared > 1 ) {
+		for ( var i = 0; i < rowsCleared; i++ ) {
+			this.score += i*5
+		}
+	}
 
 	$(".score").find("span").text(this.score);
 }
@@ -81,7 +88,6 @@ Game.prototype.levelTimer = function () {
 
 Game.prototype.getInput = function (e) {
 	e.preventDefault();
-	console.log(e.keyCode)
 	var block = this.board.curBlock;
 	var newState1 = block.isLegalState(block.curState + 1) ? block.curState + 1 : 0
 	var newState2 = block.isLegalState(block.curState - 1) ? block.curState - 1 : block.states.length - 1
