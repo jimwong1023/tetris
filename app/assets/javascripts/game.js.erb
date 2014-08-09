@@ -126,23 +126,28 @@ Game.prototype.getInput = function (e) {
 
 			case 32: {
 
-				if ( this.board.checkCollision(block.gridX, block.gridY, newState2) ) {
-					block.curState = newState2
+				while ( this.board.checkCollision(block.gridX, block.gridY + 1, block.curState ) ) {
+					block.gridY++
 				}
-				else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState2) ) {
-					block.curState = newState2
-					block.gridX--
-				}
-				else if ( block.constructor.name === "IBlock" ) {
-					if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState2) ) {
-						block.curState = newState2
-						block.gridX -= 2
-					}
-					else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState2) ) {
-						block.curState = newState2
-						block.gridX -= 3
-					}
-				}
+
+				// ROTATE CLOCKWISE
+				// if ( this.board.checkCollision(block.gridX, block.gridY, newState2) ) {
+				// 	block.curState = newState2
+				// }
+				// else if ( this.board.checkCollision(block.gridX - 1, block.gridY, newState2) ) {
+				// 	block.curState = newState2
+				// 	block.gridX--
+				// }
+				// else if ( block.constructor.name === "IBlock" ) {
+				// 	if ( this.board.checkCollision(block.gridX - 2, block.gridY, newState2) ) {
+				// 		block.curState = newState2
+				// 		block.gridX -= 2
+				// 	}
+				// 	else if ( this.board.checkCollision(block.gridX - 3, block.gridY, newState2) ) {
+				// 		block.curState = newState2
+				// 		block.gridX -= 3
+				// 	}
+				// }
 			}
 			break;
 
