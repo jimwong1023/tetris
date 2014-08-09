@@ -1,14 +1,22 @@
 <div id="board">
 	<div id='mainMenu'>
 		<h1 id='gameTitle'>Tetris</h1>
-		<div id="startGame" class="button">Start Game</div>
+		<div class="startGame button">Start Game</div>
 		<div id="main_menu_about" class="button">About</div>
 	</div>
 	<div id="canvasContainer" class="hidden">
 	  <canvas id="canvas" width="300" height="600"></canvas>
 	  <div id="gameInfo">
-	  	<p id="level">Level: <span>1</span></p>
-	  	<p id="score">Score: <span >0</span></p>
+	  	<p class="level">Level: <span>1</span></p>
+	  	<p class="score">Score: <span >0</span></p>
+	  </div>
+	</div>
+	<div id="gameOver" class="hidden">
+		<h1 id='gameTitle'>GAME OVER!</h1>
+		<div>
+	  	<p class="level">Level: <span>1</span></p>
+	  	<p class="score">Score: <span >0</span></p>
+	  	<div class="startGame button">Play Again?</div>
 	  </div>
 	</div>
 </div>
