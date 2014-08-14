@@ -11,6 +11,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem 'pry-rails'
 gem 'rails_12factor'
+gem 'bcrypt-ruby', '~> 3.1.2'
 
 group :test do
   gem 'factory_girl_rails'
@@ -24,6 +25,5 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-  gem 'debugger'
   gem 'simplecov', :require => false
 end

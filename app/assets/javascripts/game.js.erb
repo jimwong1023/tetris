@@ -507,6 +507,7 @@ $(document).ready(function () {
 			$("#mainMenu").remove();
 			$("#gameOver").addClass('hidden');
 			$("#canvasContainer").removeClass("hidden");
+			console.log(game.level);
 			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})

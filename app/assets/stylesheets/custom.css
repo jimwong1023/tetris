@@ -111,9 +111,9 @@ body {
   margin-right: auto;
   display: block;
   float: left;
-	border-left: 5px solid #000;
-	border-right: 5px solid #000;
-	border-bottom: 1px solid #000;
+	border-left: 5px solid #222200;
+	border-right: 5px solid #222200;
+	border-bottom: 1px solid #222200;
 }
 
 #gameInfo {
