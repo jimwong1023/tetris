@@ -136,6 +136,10 @@ body {
   margin-bottom: 20px;
 }
 
+#welcome {
+  text-align: center;
+}
+
 #mainMenu {
   margin: 0 auto;
   width: 400px;
@@ -163,4 +167,96 @@ body {
 
 .hidden {
 	display: none;
+}
+
+/* Forms */
+
+input {
+  display: block;
+  height: 30px;
+  width: 400px;
+  background-color: #476200;
+  border: none;
+  border-bottom: 1px solid #222200;
+  font-size: 18pt;
+  margin: 5px auto;
+  padding: 3px;
+  color: #222200;
+}
+
+input:focus {
+  outline: none;
+  background-color: #222200;
+  color: #476200;
+}
+
+.form-div {
+  position: absolute;
+  left: 1%;
+  right: 1%;
+  width: 450px;
+}
+
+#sign-in-form {
+  top: 150px;
+  margin: 0 auto;
+}
+
+#newUserForm {
+  top: 120px;
+  margin: 0 auto;
+}
+
+.form-div label {
+  margin-left: 25px;
+}
+
+.form-div h3 {
+  text-align: center;
+  width: 400px;
+  padding: 7px 0 7px 0;
+  border: 3px solid;
+  margin: 0 0 15px 22px;
+  background-color: #222200;
+  color: #476200;
+}
+
+.submit-button {
+  display: block;
+  height: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 1px solid #222200;
+  background-color: #476200;
+  color: #222200;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* About */
+
+#about h3 {
+  text-align: center;
+  width: 400px;
+  padding: 7px 0 7px 0;
+  margin: 0;
+  background-color: #222200;
+  color: #476200;
+}
+
+#about p {
+  margin: 23px 0;
+  font-size: 14pt;
+  line-height: 23px;
+}
+
+#about a {
+  color: #222200;
+}
+
+#about a:hover {
+  background-color: #222200;
+  color: #476200;
+  text-decoration: none;
 }

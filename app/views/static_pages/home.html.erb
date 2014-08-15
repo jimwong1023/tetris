@@ -1,22 +1,27 @@
 <div id="board">
-	<div id='mainMenu'>
-		<h1 id='gameTitle'>Tetris</h1>
-		<div class="startGame button">Start Game</div>
-		<div id="main_menu_about" class="button">About</div>
-	</div>
-	<div id="canvasContainer" class="hidden">
-	  <canvas id="canvas" width="300" height="600"></canvas>
-	  <div id="gameInfo">
-	  	<p class="level">Level: <span>1</span></p>
-	  	<p class="score">Score: <span >0</span></p>
-	  </div>
-	</div>
-	<div id="gameOver" class="hidden">
-		<h1 id='gameTitle'>GAME OVER!</h1>
-		<div>
-	  	<p class="level">Level: <span>1</span></p>
-	  	<p class="score">Score: <span >0</span></p>
-	  	<div class="startGame button">Play Again?</div>
-	  </div>
-	</div>
+		<% if signed_in? %>
+			<div id='mainMenu'>
+				<h1 id='gameTitle'>Tetris</h1>
+				<h3 id="welcome">Welcome <%= current_user.name %>!</h3>
+				<div class="startGame button">Start Game</div>
+			</div>
+			<div id="canvasContainer" class="hidden">
+			  <canvas id="canvas" width="300" height="600"></canvas>
+			  <div id="gameInfo">
+			  	<p class="level">Level: <span>1</span></p>
+			  	<p class="score">Score: <span >0</span></p>
+			  </div>
+			</div>
+			<div id="gameOver" class="hidden">
+				<h1 id='gameTitle'>GAME OVER!</h1>
+				<div>
+			  	<p class="level">Level: <span>1</span></p>
+			  	<p class="score">Score: <span >0</span></p>
+			  	<div class="startGame button">Play Again?</div>
+			  </div>
+			</div>
+		<% else %>
+			<h1 id='gameTitle'>Tetris</h1>
+		  <%= render 'main_menu' %>
+		<% end %>
 </div>
