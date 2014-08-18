@@ -4,6 +4,7 @@
 				<h1 id='gameTitle'>Tetris</h1>
 				<h3 id="welcome">Welcome <%= current_user.name %>!</h3>
 				<div class="startGame button">Start Game</div>
+				<%= link_to "Sign out", signout_path, method: "delete", class: 'button' %>
 			</div>
 			<div id="canvasContainer" class="hidden">
 			  <canvas id="canvas" width="300" height="600"></canvas>
@@ -18,6 +19,7 @@
 			  	<p class="level">Level: <span>1</span></p>
 			  	<p class="score">Score: <span >0</span></p>
 			  	<div class="startGame button">Play Again?</div>
+			  	<%= link_to "Sign out", signout_path, method: "delete", class: 'button' %>
 			  </div>
 			</div>
 		<% else %>
