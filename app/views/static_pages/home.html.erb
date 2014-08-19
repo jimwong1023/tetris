@@ -5,6 +5,7 @@
 				<h3 id="welcome">Welcome <%= current_user.name %>!</h3>
 				<div class="startGame button">Start Game</div>
 				<%= link_to "Sign out", signout_path, method: "delete", class: 'button' %>
+				<%= render 'shared/top_scores' %>
 			</div>
 			<div id="canvasContainer" class="hidden">
 			  <canvas id="canvas" width="300" height="600"></canvas>
@@ -17,7 +18,7 @@
 				<h1 id='gameTitle'>GAME OVER!</h1>
 				<div>
 			  	<p class="level">Level: <span>1</span></p>
-			  	<p class="score">Score: <span >0</span></p>
+			  	<p class="score">Score: <span>0</span></p>
 			  	<div class="startGame button">Play Again?</div>
 			  	<%= link_to "Sign out", signout_path, method: "delete", class: 'button' %>
 			  </div>

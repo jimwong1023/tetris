@@ -41,6 +41,7 @@ Game.prototype.update = function () {
 		requestAnimationFrame(this.update.bind(this));
 	}
 	else {
+		this.sendScore();
 		this.reset();
 		document.onkeydown = null
 		$("#canvasContainer").addClass("hidden");
@@ -56,12 +57,20 @@ Game.prototype.reset = function () {
 	this.score = 0;
 }
 
+Game.prototype.sendScore = function () {
+	var score = {score: this.score};
+	$.ajax({
+		type: "POST",
+		url: "/scores",
+		data: score
+	})
+}
+
 Game.prototype.levelUp = function () {
 	if ( this.level < Math.floor(0.2 * Math.sqrt(this.score)) ) {
 		this.level++;
-		$(".level").find("span").text(this.level);
 	}
-
+	$(".level").find("span").text(this.level);
 }
 
 Game.prototype.updateScore = function () {
@@ -518,7 +527,8 @@ $(document).ready(function () {
 			$("#mainMenu").remove();
 			$("#gameOver").addClass('hidden');
 			$("#canvasContainer").removeClass("hidden");
-			console.log(game.level);
+			game.levelUp();
+			game.updateScore();
 			document.onkeydown = game.getInput.bind(game);
 			requestAnimationFrame(game.update.bind(game));
 		})

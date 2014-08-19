@@ -2,6 +2,7 @@ Tetris::Application.routes.draw do
 
   resources :users, only: [:new, :create]
   resources :sessions, only: [:new, :create, :destroy]
+  resources :scores, only: [:create]
 
   root to: 'static_pages#home'
   get '/about' => 'static_pages#about', as: :about

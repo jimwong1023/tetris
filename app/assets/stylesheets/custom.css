@@ -169,6 +169,21 @@ body {
 	display: none;
 }
 
+.center {
+  text-align: center;
+}
+
+#topScores p {
+  margin-top: 50px;
+  font-weight: bold;
+}
+
+#topScores ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 /* Forms */
 
 input {

@@ -1,0 +1,11 @@
+<div id="topScores" class="center">
+	<p>Top Scores</p>
+	<ul>
+		<% @top_scores.each_with_index do |i, index| %>
+			<% if index % 2 != 0 %>
+				<% next %>
+			<% end %>
+			<li><%= i %>: <%= @top_scores[index + 1] %></li>
+		<% end %>
+	</ul>
+</div>
