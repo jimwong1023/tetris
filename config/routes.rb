@@ -7,6 +7,7 @@ Tetris::Application.routes.draw do
   root to: 'static_pages#home'
   get '/about' => 'static_pages#about', as: :about
   delete '/signout', to: 'sessions#destroy'
+  get "*path" => redirect("/")
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
